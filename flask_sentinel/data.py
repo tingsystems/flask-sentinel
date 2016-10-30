@@ -16,7 +16,6 @@ from werkzeug.security import gen_salt
 from .core import mongo, redis
 from .models import Client, User, Token
 
-
 # TODO use SONManipulator instead of custom de/serializers perhaps?
 
 # map collection _id (primary key) to class property.
@@ -85,12 +84,11 @@ def _properties(obj, include_id=False):
         name for (name, value) in inspect.getmembers(
             obj.__class__, lambda p: isinstance(p, property)
         ) if name != id.cls or include_id
-    ]
+        ]
     return a
 
 
 class Storage(object):
-
     @staticmethod
     def get_client(client_id):
         """ Loads a client from mongodb and returns it as a Client or None.
@@ -105,7 +103,7 @@ class Storage(object):
         user = mongo.db.users.find_one({'username': username})
         if user and password:
             encoded_pw = password.encode('utf-8')
-            user_hash = (user['hashpw'].encode('utf-8')
+            user_hash = (user['hashpw']
                          if hasattr(user['hashpw'], 'encode')
                          else user['hashpw'])
             user = mongo.db.users.find_one({
